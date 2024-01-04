@@ -3,7 +3,18 @@ export type ApiResponse = {
     msg: string
 }
 
+export type UserState = {
+    user?: UserResponse,
+    loading?: boolean
+}
+
 export type ApiAuthResponse = ApiResponse & { token?: string };
+
+export interface ApiUserResponse {
+    ok: boolean,
+    msg?: string,
+    user?: UserResponse
+}
 
 export interface UserResponse {
     id: number
