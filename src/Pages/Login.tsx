@@ -4,12 +4,11 @@ import { Link } from 'react-router-dom';
 import Alert from "../components/Alert";
 import { ApiAuthResponse } from "../@types/myTypes";
 import { AxiosError } from "axios";
+import createAlert from "../helpers/createAlert";
 
 export default function Login() {
 
-    const [alertVisible, setAlertVisible] = useState(false);
-    const [msg, setMsg] = useState('');
-    const [alertType, setAlertType] = useState(false);
+    const [alert, setAlert] = useState({type: false, msg: '', visible: false});
 
     async function handleSubmit(e: FormEvent<HTMLFormElement>) {
         e.preventDefault();
@@ -23,26 +22,15 @@ export default function Login() {
                 localStorage.setItem('token', data.token);
             }
             
-            setMsg(data.msg);
-            setAlertType(data.ok);
-            setAlertVisible(true);
-
-            setTimeout(() => {
-                setMsg('');
-                setAlertType(false);
-                setAlertVisible(false);
-            }, 1500)
+            createAlert(setAlert, { msg: data.msg, type: data.ok, visible: true });
         } catch (error) {
             if (error instanceof AxiosError) {
-                setMsg((error.response?.data as ApiAuthResponse).msg);
-                setAlertType(false);
-                setAlertVisible(true);
 
-                setTimeout(() => {
-                    setMsg('');
-                    setAlertType(false);
-                    setAlertVisible(false);
-                }, 3000)
+                createAlert(setAlert, {
+                    msg: (error.response?.data as ApiAuthResponse).msg,
+                    type: false,
+                    visible: true
+                });
             }
         }
     }
@@ -65,7 +53,7 @@ export default function Login() {
                     </button>
                 </form>
                 <Link to='/register'>Don't have an account yet? Click here</Link>
-                {alertVisible ? <Alert type={alertType} msg={msg}></Alert> : null}
+                {alert.visible ? <Alert type={alert.type} msg={alert.msg}></Alert> : null}
             </div>
         </main>
     )

@@ -7,6 +7,8 @@ import VerifyAccount from './Pages/VerifyAccount';
 import Login from './Pages/Login';
 import { UserProvider } from './context/userProvider';
 import Protected from './Pages/Protected';
+import Home from './Pages/Home';
+import Profile from './Pages/Profile';
 
 const router = createBrowserRouter([
   {
@@ -23,7 +25,17 @@ const router = createBrowserRouter([
   },
   {
     path: '/',
-    element: <Protected></Protected>
+    element: <Protected></Protected>,
+    children: [
+      {
+        index: true,
+        element: <Home></Home>
+      },
+      {
+        path: '/profile',
+        element: <Profile></Profile>
+      }
+    ]
   }
 ]);
 

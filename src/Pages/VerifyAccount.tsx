@@ -4,13 +4,12 @@ import axiosInstance from "../utils/axios";
 import Alert from "../components/Alert";
 import { ApiResponse } from "../@types/myTypes";
 import { AxiosError } from "axios";
+import createAlert from "../helpers/createAlert";
 
 export default function VerifyAccount() {
     
     const { token } = useParams();
-    const [alertVisible, setAlertVisible] = useState(false);
-    const [msg, setMsg] = useState('');
-    const [alertType, setAlertType] = useState(false);
+    const [alert, setAlert] = useState({type: false, msg: '', visible: false});
 
     useEffect(() => {
 
@@ -19,29 +18,16 @@ export default function VerifyAccount() {
             try {
             
                 const { data } = await axiosInstance.get<ApiResponse>(`/users/auth/confirm/${token}`);
-                
-                setAlertType(data.ok);
-                setMsg(data.msg);
-                setAlertVisible(true);
 
-                setTimeout(() => {
-                    setAlertType(false);
-                    setMsg('');
-                    setAlertVisible(false);
-                }, 3000)
-
+                createAlert(setAlert, { msg: data.msg, type: data.ok, visible: true });
             } catch (error) {
                 
                 if (error instanceof AxiosError) {
-                    setAlertType(false);
-                    setMsg((error.response?.data as ApiResponse).msg);
-                    setAlertVisible(true);
-
-                    setTimeout(() => {
-                        setAlertType(false);
-                        setMsg('');
-                        setAlertVisible(false);
-                    }, 3000)
+                    createAlert(setAlert, {
+                        msg: (error.response?.data as ApiResponse).msg,
+                        type: false,
+                        visible: true
+                    });
                 }
             }
         }
@@ -55,7 +41,7 @@ export default function VerifyAccount() {
             <h1 className="text-5xl font-[Poppins] font-bold text-blue-700">Task Manager</h1>
             <div>
                 <p className="font-[Poppins] text-lg">Verifying your account...</p>
-                {alertVisible ? <Alert type={alertType} msg={msg}></Alert> : null} 
+                {alert.visible ? <Alert type={alert.type} msg={alert.msg}></Alert> : null} 
             </div>
         </main>
     )

@@ -8,11 +8,17 @@ export type UserState = {
     loading?: boolean
 }
 
+export type Alert = {
+    msg: string,
+    type: boolean,
+    visible: boolean
+}
+
 export type ApiAuthResponse = ApiResponse & { token?: string };
 
 export interface ApiUserResponse {
     ok: boolean,
-    msg?: string,
+    msg: string,
     user?: UserResponse
 }
 
