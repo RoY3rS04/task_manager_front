@@ -23,6 +23,8 @@ export default function Login() {
             }
             
             createAlert(setAlert, { msg: data.msg, type: data.ok, visible: true });
+
+            window.location.href = '/';
         } catch (error) {
             if (error instanceof AxiosError) {
 

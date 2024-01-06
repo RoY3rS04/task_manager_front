@@ -4,7 +4,7 @@ export default function Alert({ type, msg }: {type: boolean, msg: string}) {
 
     return (
         <div className={
-            clsx('py-2 px-3 rounded-m font-medium text-lg overflow-hidden relative', {
+            clsx('w-full py-2 px-3 rounded-m font-medium text-lg overflow-hidden relative', {
                 'bg-[#C5F4D8] text-[#28D671]': type 
             }, {
                 'bg-[#FFE1E3] text-[#F9475B]': !type

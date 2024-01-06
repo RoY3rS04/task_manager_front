@@ -9,6 +9,8 @@ import { UserProvider } from './context/userProvider';
 import Protected from './Pages/Protected';
 import Home from './Pages/Home';
 import Profile from './Pages/Profile';
+import Team from './Pages/Team';
+import CreateTeam from './Pages/CreateTeam';
 
 const router = createBrowserRouter([
   {
@@ -34,6 +36,14 @@ const router = createBrowserRouter([
       {
         path: '/profile',
         element: <Profile></Profile>
+      },
+      {
+        path: '/team',
+        element: <Team></Team>
+      },
+      {
+        path: '/team/create',
+        element: <CreateTeam></CreateTeam>
       }
     ]
   }

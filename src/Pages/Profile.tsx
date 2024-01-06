@@ -4,7 +4,7 @@ import axiosInstance from '../utils/axios';
 import Alert from "../components/Alert";
 import createAlert from "../helpers/createAlert";
 import { AxiosError } from "axios";
-import { ApiUserResponse } from "../@types/myTypes";
+import { ApiResponse, ApiUserResponse } from "../@types/myTypes";
 
 export default function Profile() {
 
@@ -43,8 +43,29 @@ export default function Profile() {
         }
     }
 
+    async function handleDelete() {
+        
+        try {
+            const { data } = await axiosInstance.delete<ApiUserResponse>('/users', {
+                headers: {
+                    password
+                }
+            });
+
+            localStorage.removeItem('token');
+            createAlert(setAlert, { type: data.ok, visible: true, msg: data.msg });
+            window.location.href = '/login';
+
+        } catch (error) {
+            if (error instanceof AxiosError) {
+                createAlert(setAlert, { type: false, visible: true, msg: (error.response?.data as ApiResponse).msg }); 
+            }
+        }
+
+    }
+
     return (
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center p-2">
             <h1 className="text-3xl font-bold text-center mb-5">Profile</h1>
             <div className="w-[100px] h-[100px] relative">
                 <div className="overflow-hidden w-full h-full rounded-full">
@@ -97,7 +118,10 @@ export default function Profile() {
                         type="file"
                         hidden />
                 </div>
-                <button className="py-2 px-3 bg-blue-600 rounded-lg text-white w-full text-lg font-semibold my-2">Update Info</button>
+                <div className="flex gap-x-3">
+                    <button className="py-2 px-3 bg-blue-600 rounded-lg text-white w-full text-lg font-semibold my-2">Update Info</button>
+                    <button type="button" onClick={handleDelete} className="py-2 px-3 bg-red-600 rounded-lg text-white w-full text-lg font-semibold my-2">Delete User</button>
+                </div>
                 {alert.visible ? <Alert type={alert.type} msg={alert.msg}></Alert> : null}
             </form>
         </div>

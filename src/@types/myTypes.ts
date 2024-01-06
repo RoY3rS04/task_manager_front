@@ -16,10 +16,12 @@ export type Alert = {
 
 export type ApiAuthResponse = ApiResponse & { token?: string };
 
-export interface ApiUserResponse {
-    ok: boolean,
-    msg: string,
+export interface ApiUserResponse extends ApiResponse {
     user?: UserResponse
+}
+
+export interface ApiTeamResponse<T extends number|UserResponse> extends ApiResponse {
+    team?: TeamUsersResponse<T>
 }
 
 export interface UserResponse {
@@ -42,6 +44,6 @@ export interface TeamResponse<T extends number|UserResponse> {
     updated_at: Date,
 }
 
-export interface TeamUsersResponse extends TeamResponse<UserResponse> {
-    members: UserResponse[] 
+export interface TeamUsersResponse<T extends number|UserResponse> extends TeamResponse<T> {
+    members: T extends number ? T : T[]
 }
