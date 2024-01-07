@@ -31,12 +31,12 @@ export interface ApiTeamResponse<T extends number|UserResponse> extends ApiRespo
     team?: TeamUsersResponse<T>
 }
 
-export interface ApiTaskResponse extends ApiResponse {
-    task?: TaskResponse
+export interface ApiTaskResponse<T extends number|UserResponse> extends ApiResponse {
+    task?: TaskResponse<T>
 }
 
-export interface ApiTasksResponse extends ApiResponse {
-    tasks?: TaskResponse[]
+export interface ApiTasksResponse<T extends number|UserResponse> extends ApiResponse {
+    tasks?: TaskResponse<T>[]
 }
 
 export interface UserResponse extends BasicResponse {
@@ -55,8 +55,10 @@ export interface TeamUsersResponse<T extends number|UserResponse> extends TeamRe
     members: T extends number ? T : T[]
 }
 
-export interface TaskResponse extends BasicResponse {
+export interface TaskResponse<T extends number|UserResponse> extends BasicResponse {
     title: string,
     description: string,
-    completed_at: Date|null
+    created_by: T,
+    completed_at: Date | null,
+    users?: T extends number ? T : T[]
 }

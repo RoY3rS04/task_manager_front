@@ -12,6 +12,7 @@ import Profile from './Pages/Profile';
 import Team from './Pages/Team';
 import CreateTeam from './Pages/CreateTeam';
 import CreateTask from './Pages/CreateTask';
+import Tasks from './Pages/Tasks';
 
 const router = createBrowserRouter([
   {
@@ -49,6 +50,10 @@ const router = createBrowserRouter([
       {
         path: '/tasks/create',
         element: <CreateTask></CreateTask>
+      },
+      {
+        path: '/tasks',
+        element: <Tasks></Tasks>
       }
     ]
   }
