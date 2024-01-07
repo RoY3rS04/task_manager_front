@@ -26,8 +26,8 @@ export default function CreateTeam() {
 
         try {
             
-            const { data } = await axiosInstance.post<ApiTeamResponse>('/teams', info);
-            
+            const { data } = await axiosInstance.post<ApiTeamResponse<number>>('/teams', info);
+        
             createAlert(setAlert, { msg: data.msg, type: data.ok, visible: true });
         } catch (error) {
             if (error instanceof AxiosError) {

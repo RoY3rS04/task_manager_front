@@ -1,6 +1,6 @@
-import { TeamUsersResponse } from "../@types/myTypes";
+import { TeamUsersResponse, UserResponse } from "../@types/myTypes";
 
-export default function TeamHeader({ info }: { info: TeamUsersResponse<number> }) {
+export default function TeamHeader({ info }: { info: TeamUsersResponse<UserResponse> }) {
 
     return (
         <header className="w-full p-5 bg-gray-100">
@@ -10,7 +10,7 @@ export default function TeamHeader({ info }: { info: TeamUsersResponse<number> }
                 </div>
                 <div className="space-y-4">
                     <h1 className="font-bold text-2xl">{info.name}</h1>
-                    <p>members: {info.members}</p>
+                    <p>members: {info.members.length}</p>
                 </div>
             </div>
         </header>

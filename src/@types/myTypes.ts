@@ -3,6 +3,13 @@ export type ApiResponse = {
     msg: string
 }
 
+type BasicResponse = {
+    id: string,
+    state: boolean,
+    created_at: Date,
+    updated_at: Date|null
+}
+
 export type UserState = {
     user?: UserResponse,
     loading?: boolean
@@ -24,26 +31,32 @@ export interface ApiTeamResponse<T extends number|UserResponse> extends ApiRespo
     team?: TeamUsersResponse<T>
 }
 
-export interface UserResponse {
-    id: number
-    name: string,
-    gmail: string,
-    state: boolean,
-    image_url: string,
-    created_at: Date,
-    updated_at: Date
+export interface ApiTaskResponse extends ApiResponse {
+    task?: TaskResponse
 }
 
-export interface TeamResponse<T extends number|UserResponse> {
-    id: number
+export interface ApiTasksResponse extends ApiResponse {
+    tasks?: TaskResponse[]
+}
+
+export interface UserResponse extends BasicResponse {
     name: string,
-    state: boolean,
+    gmail: string,
     image_url: string,
-    created_by: T,
-    created_at: Date,
-    updated_at: Date,
+}
+
+export interface TeamResponse<T extends number|UserResponse> extends BasicResponse {
+    name: string,
+    image_url: string,
+    created_by: T
 }
 
 export interface TeamUsersResponse<T extends number|UserResponse> extends TeamResponse<T> {
     members: T extends number ? T : T[]
+}
+
+export interface TaskResponse extends BasicResponse {
+    title: string,
+    description: string,
+    completed_at: Date|null
 }
