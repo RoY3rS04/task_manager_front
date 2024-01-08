@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { ApiResponse, ApiTasksResponse, TaskResponse, UserResponse } from "../@types/myTypes";
+import { createContext, useEffect, useState } from "react";
+import { ApiResponse, ApiTasksResponse, ApiTeamResponse, TaskResponse, UserResponse } from "../@types/myTypes";
 import axiosInstance from "../utils/axios";
 import createAlert from "../helpers/createAlert";
 import Alert from "../components/Alert";
@@ -10,6 +10,7 @@ export default function Tasks() {
 
     const [tasks, setTasks] = useState<TaskResponse<UserResponse>[]>();
     const [alert, setAlert] = useState({ msg: '', type: false, visible: false });
+    const [teamUsers, setTeamUsers] = useState({});
 
     useEffect(() => {
 
@@ -33,7 +34,26 @@ export default function Tasks() {
 
         }
 
+        async function getTeamUsers() {
+
+            try {
+                const { data } = await axiosInstance.get<ApiTeamResponse<UserResponse>>('/users/user/team', {
+                    headers: {
+                        with_users: true
+                    }
+                });
+
+                const TeamContext = createContext(data.team?.members);
+            } catch (error) {
+                if (error instanceof AxiosError) {
+                    createAlert(setAlert, {msg: (error.response?.data as ApiResponse).msg, visible: true, type: false});
+                }
+            }
+
+        }
+
         getUserTasks();
+        getTeamUsers();
 
     }, []);
 
