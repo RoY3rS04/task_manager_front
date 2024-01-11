@@ -6,13 +6,17 @@ export default function createAlert(
     data: Alert
 ) {
 
-    setAlert(data);
+    return new Promise((resolve, reject) => {
+        setAlert(data);
 
-    setTimeout(() => {
-        setAlert({
-            msg: '',
-            visible: false,
-            type: false
-        });
-    }, 3000)
+        setTimeout(() => {
+            setAlert({
+                msg: '',
+                visible: false,
+                type: false
+            });
+
+            resolve('done');
+        }, 3000)
+    })
 }

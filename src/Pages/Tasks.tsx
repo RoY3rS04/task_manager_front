@@ -1,16 +1,20 @@
-import { createContext, useEffect, useState } from "react";
-import { ApiResponse, ApiTasksResponse, ApiTeamResponse, TaskResponse, UserResponse } from "../@types/myTypes";
+import React, { createContext, useEffect, useState } from "react";
+import { ApiResponse, ApiTaskResponse, ApiTasksResponse, ApiTeamResponse, TaskResponse, UserResponse } from "../@types/myTypes";
 import axiosInstance from "../utils/axios";
 import createAlert from "../helpers/createAlert";
 import Alert from "../components/Alert";
 import { AxiosError } from "axios";
 import TaskCard from "../components/TaskCard";
 import useAuth from "../hooks/useAuth";
+import Modal from "../components/Modal";
 
 export const TeamContext = createContext<UserResponse[]>([]);
 export const TaskContext = createContext({
     assignTaskUser: (taskId: number, userId: number) => {},
-    removeTaskUser: (taskId: number, userId: number) => {}
+    removeTaskUser: (taskId: number, userId: number) => { },
+    setModal: (val: boolean) => {},
+    setTaskId: (val: number) => {},
+    completeTask: (task: TaskResponse<UserResponse>) => {}
 });
 
 export default function Tasks() {
@@ -18,6 +22,8 @@ export default function Tasks() {
     const [tasks, setTasks] = useState<TaskResponse<UserResponse>[]>();
     const [alert, setAlert] = useState({ msg: '', type: false, visible: false });
     const [teamUsers, setTeamUsers] = useState<UserResponse[]>([]);
+    const [modal, setModal] = useState(false);
+    const [taskId, setTaskId] = useState(0);
     const {user} = useAuth();
 
     useEffect(() => {
@@ -76,8 +82,7 @@ export default function Tasks() {
                 user_id: userId
             });
 
-            createAlert(setAlert, { msg: data.msg, type: data.ok, visible: true });
-
+            await createAlert(setAlert, { msg: data.msg, type: data.ok, visible: true });
         } catch (error) {
             if (error instanceof AxiosError) {
                 createAlert(setAlert, { msg: (error.response?.data as ApiResponse).msg, type: false, visible: true });
@@ -92,12 +97,42 @@ export default function Tasks() {
             const { data } = await axiosInstance.delete<ApiResponse>(`/tasks/${taskId}/users/${userId}`);
 
             createAlert(setAlert, { msg: data.msg, type: data.ok, visible: true });
-
         } catch (error) {
             if (error instanceof AxiosError) {
                 createAlert(setAlert, { msg: (error.response?.data as ApiResponse).msg, type: false, visible: true });
+            }
+        }
+    }
 
+    async function deleteTask() {
 
+        try {
+            const { data } = await axiosInstance.delete<ApiTaskResponse<number>>(`/tasks/${taskId}`);
+
+            setModal(false);
+            setTaskId(0);
+
+            createAlert(setAlert, { msg: data.msg, type: data.ok, visible: true });
+        } catch (error) {
+            if (error instanceof AxiosError) {
+                createAlert(setAlert, { msg: (error.response?.data as ApiResponse).msg, visible: true, type: false });
+            }
+        }
+    }
+
+    async function completeTask(task: TaskResponse<UserResponse>) {
+
+        const completed = !task.completed_at;
+
+        try {
+            const { data } = await axiosInstance.patch<ApiResponse>(`/tasks/complete/${task.id}`, {
+                completed
+            });
+
+            createAlert(setAlert, { msg: data.msg, type: data.ok, visible: true });
+        } catch (error) {
+            if (error instanceof AxiosError) {
+                createAlert(setAlert, {msg: (error.response?.data as ApiResponse).msg, type: false, visible: true})
             }
         }
     }
@@ -108,7 +143,10 @@ export default function Tasks() {
                 <TaskContext.Provider value={
                     {
                         assignTaskUser,
-                        removeTaskUser
+                        removeTaskUser,
+                        setModal,
+                        setTaskId,
+                        completeTask
                     }
                 }>
                     <h1 className="text-center font-bold text-2xl">Your Tasks</h1>
@@ -118,6 +156,19 @@ export default function Tasks() {
                     </div>
                 </TaskContext.Provider>
             </TeamContext.Provider>
+            {
+                modal ?
+                    <Modal>
+                        <div className="absolute top-0 bottom-0 right-0 left-0 z-10 flex items-center justify-center">
+                            <div className="p-5 shadow-xl bg-white rounded-sm relative flex gap-y-3 flex-col">
+                                <h3 className="text-center font-medium">Are you sure you want to remove this task?</h3>
+                                <button onClick={() => { setModal(false); setTaskId(0) }} className="rounded-full bg-white w-8 h-8 absolute -top-2 -right-2 text-red-600 font-bold border">x</button>
+                                <button onClick={deleteTask} className="bg-red-600 font-medium text-white rounded-md py-2 px-3 w-full">Delete Task</button>
+                            </div>
+                        </div>
+                    </Modal>
+                : null
+            }
         </section>
     )
 }
