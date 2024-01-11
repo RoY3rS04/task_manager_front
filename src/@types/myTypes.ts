@@ -4,7 +4,7 @@ export type ApiResponse = {
 }
 
 type BasicResponse = {
-    id: string,
+    id: number,
     state: boolean,
     created_at: Date,
     updated_at: Date|null

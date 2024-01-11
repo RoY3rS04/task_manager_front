@@ -15,7 +15,7 @@ export default function CreateTask() {
         const info = new FormData(e.target as HTMLFormElement);
 
         try {
-            const { data } = await axiosInstance.post<ApiTaskResponse>('/tasks/', info);
+            const { data } = await axiosInstance.post<ApiTaskResponse<number>>('/tasks/', info);
 
             createAlert(setAlert, { msg: data.msg, type: data.ok, visible: true });
         } catch (error) {

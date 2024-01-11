@@ -1,9 +1,12 @@
+import { useContext } from "react";
 import { TaskResponse, UserResponse } from "../@types/myTypes";
 import useAuth from "../hooks/useAuth";
+import { TaskContext } from "../Pages/Tasks";
 
-export default function TaskUserInfo({user, asign = true, task}: {user: UserResponse, asign: boolean, task: TaskResponse<UserResponse>}) {
+export default function TaskUserInfo({user, assign = true, task}: {user: UserResponse, assign: boolean, task: TaskResponse<UserResponse>}) {
 
-    const {user: auth} = useAuth();
+    const { user: auth } = useAuth();
+    const { assignTaskUser, removeTaskUser } = useContext(TaskContext);
 
     return (
         <div className="w-full border-b-[1px] bg-white border-gray-200 p-2 flex items-center gap-x-3">
@@ -12,11 +15,11 @@ export default function TaskUserInfo({user, asign = true, task}: {user: UserResp
             </div>
             <span className="font-medium text-sm">{user?.name}</span>
             {
-                asign ?
+                assign ?
                     !task?.users?.map(u => u.id).includes(user.id) ?
-                        <button className="py-1 px-2 text-white rounded-sm text-xs bg-orange-400">Asign User</button>
+                        <button onClick={() => assignTaskUser(task.id, user.id)} className="py-1 px-2 text-white rounded-sm text-xs bg-orange-400">Assign User</button>
                         : <span className="text-xs">Already assigned</span>
-                    : task.created_by.id === auth?.id ? <button className="py-1 px-2 text-white rounded-sm text-xs bg-red-500 flex-1">Remove from Task</button> : null
+                    : task.created_by.id === auth?.id ? <button onClick={() => removeTaskUser(task.id, user.id)} className="py-1 px-2 text-white rounded-sm text-xs bg-red-500 flex-1">Remove from Task</button> : null
             }
         </div>
     )
