@@ -14,6 +14,7 @@ import CreateTeam from './Pages/CreateTeam';
 import CreateTask from './Pages/CreateTask';
 import Tasks from './Pages/Tasks';
 import EditTask from './Pages/EditTask';
+import EditTeam from './Pages/EditTeam';
 
 const router = createBrowserRouter([
   {
@@ -57,8 +58,12 @@ const router = createBrowserRouter([
         element: <Tasks></Tasks>
       },
       {
-        path: '/task/:id',
+        path: '/task/edit/:id',
         element: <EditTask></EditTask>
+      },
+      {
+        path: '/team/edit/:id',
+        element: <EditTeam></EditTeam>
       }
     ]
   }

@@ -24,10 +24,12 @@ export default function Tasks() {
     const [teamUsers, setTeamUsers] = useState<UserResponse[]>([]);
     const [modal, setModal] = useState(false);
     const [taskId, setTaskId] = useState(0);
-    const {user} = useAuth();
+    const { user } = useAuth();
+    const [reload, setReload] = useState(false);
 
     useEffect(() => {
 
+        setReload(false);
         async function getUserTasks() {
 
             try {
@@ -72,7 +74,7 @@ export default function Tasks() {
         getUserTasks();
         getTeamUsers();
 
-    }, [alert]);
+    }, [reload]);
 
     async function assignTaskUser(taskId: number, userId: number) {
 
@@ -82,7 +84,8 @@ export default function Tasks() {
                 user_id: userId
             });
 
-            await createAlert(setAlert, { msg: data.msg, type: data.ok, visible: true });
+            createAlert(setAlert, { msg: data.msg, type: data.ok, visible: true });
+            setReload(true);
         } catch (error) {
             if (error instanceof AxiosError) {
                 createAlert(setAlert, { msg: (error.response?.data as ApiResponse).msg, type: false, visible: true });
@@ -97,6 +100,7 @@ export default function Tasks() {
             const { data } = await axiosInstance.delete<ApiResponse>(`/tasks/${taskId}/users/${userId}`);
 
             createAlert(setAlert, { msg: data.msg, type: data.ok, visible: true });
+            setReload(true);
         } catch (error) {
             if (error instanceof AxiosError) {
                 createAlert(setAlert, { msg: (error.response?.data as ApiResponse).msg, type: false, visible: true });
@@ -113,6 +117,7 @@ export default function Tasks() {
             setTaskId(0);
 
             createAlert(setAlert, { msg: data.msg, type: data.ok, visible: true });
+            setReload(true);
         } catch (error) {
             if (error instanceof AxiosError) {
                 createAlert(setAlert, { msg: (error.response?.data as ApiResponse).msg, visible: true, type: false });
@@ -130,6 +135,7 @@ export default function Tasks() {
             });
 
             createAlert(setAlert, { msg: data.msg, type: data.ok, visible: true });
+            setReload(true);
         } catch (error) {
             if (error instanceof AxiosError) {
                 createAlert(setAlert, {msg: (error.response?.data as ApiResponse).msg, type: false, visible: true})
