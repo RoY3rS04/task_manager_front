@@ -10,7 +10,7 @@ export default function TaskUserInfo({user, assign = true, task}: {user: UserRes
 
     return (
         <div className="w-full border-b-[1px] bg-white border-gray-200 p-2 flex items-center gap-x-3">
-            <div className="min-w-6 max-w-8 min-h-6 max-h-8 rounded-full overflow-hidden">
+            <div className="h-8 w-8 rounded-full overflow-hidden">
                 <img className="w-full h-full object-cover object-center" src={user?.image_url.split('*')[0]} alt="User image" />
             </div>
             <span className="font-medium text-sm">{user?.name}</span>

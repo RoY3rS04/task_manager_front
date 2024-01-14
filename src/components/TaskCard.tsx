@@ -52,7 +52,7 @@ export default function TaskCard({ task }: { task: TaskResponse<UserResponse> })
                 <div className="flex items-center justify-between">
                     <div className="flex gap-x-4">
                         <div className="relative group">
-                            <button type="button" className="text-white bg-blue-600 py-1 px-2 rounded-md text-sm font-semibold">Asigned Users</button>
+                            <button type="button" className="text-white bg-blue-600 py-1 px-2 rounded-md text-sm font-semibold">Assigned Users</button>
                             <div className="rounded-sm space-y-1 absolute top-0 left-[100%] hidden shadow-md group-hover:block z-10 w-[200px]">
                                 {
                                     task.users?.length ?
@@ -62,13 +62,13 @@ export default function TaskCard({ task }: { task: TaskResponse<UserResponse> })
                                             )
                                         : null
                                         : <div className="p-2 bg-white">
-                                            <p className="text-xs min-w-20">No users asigned yet.</p>
+                                            <p className="text-xs min-w-20">No users assigned yet.</p>
                                     </div>
                                 }
                             </div>
                         </div>
                         {task.created_by.id === user?.id ? <div id={`btn-${task.id}`} className="relative group">
-                            <button type="button" className="text-white bg-green-600 py-1 px-2 rounded-md text-sm font-semibold">Asign Users</button>
+                            <button type="button" className="text-white bg-green-600 py-1 px-2 rounded-md text-sm font-semibold">Assign Users</button>
                             <div className={clsx('rounded-sm space-y-1 absolute hidden shadow-md group-hover:block z-10 w-[200px]', {
                                 'top-0 left-[100%]': distance > 250,
                                 'top-7 -left-0': distance < 250

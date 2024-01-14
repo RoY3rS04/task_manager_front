@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react"
 import axiosInstance from "../utils/axios";
-import { ApiResponse, ApiTeamResponse, TeamUsersResponse, UserResponse } from "../@types/myTypes";
+import { ApiLinkResponse, ApiResponse, ApiTeamResponse, TeamUsersResponse, UserResponse } from "../@types/myTypes";
 import createAlert from "../helpers/createAlert";
 import { AxiosError } from "axios";
 import Alert from "../components/Alert";
 import TeamHeader from '../components/TeamHeader';
 import UserCard from '../components/UserCard';
 import Modal from "../components/Modal";
+import useAuth from "../hooks/useAuth";
 
 export default function Team() {
     
@@ -15,6 +16,7 @@ export default function Team() {
     const [modal, setModal] = useState(false);
     const [teamId, setTeamId] = useState(0);
     const [reload, setReload] = useState(false);
+    const { user: auth } = useAuth();
 
     useEffect(() => {
 
@@ -61,14 +63,53 @@ export default function Team() {
 
     }
 
+    async function removeUserFromTeam(user: UserResponse) {
+
+        try {
+           const { data } = await axiosInstance.delete<ApiResponse>(`/teams/${team?.id}/users/${user.id}`);
+
+            createAlert(setAlert, { msg: data.msg, type: data.ok, visible: true });
+            setReload(true);
+
+            if (user.id !== team?.created_by.id) {
+                setTeam(undefined);
+            }
+
+        } catch (error) {
+            if (error instanceof AxiosError) {
+                createAlert(setAlert, { msg: (error.response?.data as ApiResponse).msg, type: false, visible: true });
+            }
+        }
+
+    }
+
+    async function generateLink() {
+
+        try {
+            const { data } = await axiosInstance.get<ApiLinkResponse>(`/teams/generate-link/${team?.id}`);
+
+            console.log(data.link);
+
+            createAlert(setAlert, { msg: data.msg, type: data.ok, visible: true });
+
+            navigator.clipboard.writeText(data.link);
+        } catch (error) {
+            if (error instanceof AxiosError) {
+                createAlert(setAlert, { msg: (error.response?.data as ApiResponse).msg, type: false, visible: true });
+            }
+        }
+
+    }
+
     return (
         <section>
-            {team ? <TeamHeader info={team} setModal={setModal} setTeamId={setTeamId}></TeamHeader> : null}
-            <div className="grid grid-cols-4 gap-3 p-3">
+            {team ? <TeamHeader removeUser={removeUserFromTeam} generateLink={generateLink} team={team} setModal={setModal} setTeamId={setTeamId}></TeamHeader> : null}
+            <h2 className="text-xl font-medium px-5 my-4">Members:</h2>
+            <div className="grid grid-cols-4 gap-3 px-5">
                 {
                     team ? team.members
                         .map(user =>
-                            user.id !== team.created_by.id ? <UserCard key={user.id} user={user}></UserCard>
+                            user.id !== auth?.id ? <UserCard team={team} removeUser={removeUserFromTeam} key={user.id} user={user}></UserCard>
                             : null)
                         : null
                 }

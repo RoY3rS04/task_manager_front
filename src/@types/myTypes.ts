@@ -21,6 +21,10 @@ export type Alert = {
     visible: boolean
 }
 
+export type ApiLinkResponse = ApiResponse & {
+    link: string
+}
+
 export type ApiAuthResponse = ApiResponse & { token?: string };
 
 export interface ApiUserResponse extends ApiResponse {
