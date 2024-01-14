@@ -104,8 +104,8 @@ export default function Team() {
     return (
         <section>
             {team ? <TeamHeader removeUser={removeUserFromTeam} generateLink={generateLink} team={team} setModal={setModal} setTeamId={setTeamId}></TeamHeader> : null}
-            <h2 className="text-xl font-medium px-5 my-4">Members:</h2>
-            <div className="grid grid-cols-4 gap-3 px-5">
+            {team ? <h2 className="text-xl font-medium px-5 my-4">Members:</h2> : null}
+            <div className="grid grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-3 px-5">
                 {
                     team ? team.members
                         .map(user =>

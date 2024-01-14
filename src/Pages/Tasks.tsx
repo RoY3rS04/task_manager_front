@@ -130,7 +130,7 @@ export default function Tasks() {
         const completed = !task.completed_at;
 
         try {
-            const { data } = await axiosInstance.patch<ApiResponse>(`/tasks/complete/${task.id}`, {
+            const { data } = await axiosInstance.patch<ApiTaskResponse<number>>(`/tasks/complete/${task.id}`, {
                 completed
             });
 
@@ -157,7 +157,7 @@ export default function Tasks() {
                 }>
                     <h1 className="text-center font-bold text-2xl">Your Tasks</h1>
                     {alert.visible ? <Alert type={alert.type} msg={alert.msg}></Alert> : null}
-                    <div className="grid grid-cols-3 gap-4">
+                    <div className="grid grid-cols-3 gap-4 lg:grid-cols-2 sm:flex sm:flex-col">
                         {tasks ? tasks.map(task => <TaskCard key={task.id} task={task}></TaskCard>) : null}
                     </div>
                 </TaskContext.Provider>

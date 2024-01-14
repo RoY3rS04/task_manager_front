@@ -38,6 +38,8 @@ export default function TaskCard({ task }: { task: TaskResponse<UserResponse> })
         completeTask(task);
     }
 
+    console.log(distance);
+
     return (
         <article className="rounded-md shadow-md p-3 relative">
             <div className="space-y-2">
@@ -50,10 +52,10 @@ export default function TaskCard({ task }: { task: TaskResponse<UserResponse> })
                 </div>
                 <p className="text-sm">{task.description}</p>
                 <div className="flex items-center justify-between">
-                    <div className="flex gap-x-4">
+                    <div className="flex gap-x-2">
                         <div className="relative group">
                             <button type="button" className="text-white bg-blue-600 py-1 px-2 rounded-md text-sm font-semibold">Assigned Users</button>
-                            <div className="rounded-sm space-y-1 absolute top-0 left-[100%] hidden shadow-md group-hover:block z-10 w-[200px]">
+                            <div className="rounded-sm space-y-1 absolute top-0 left-[100%] hidden shadow-md group-hover:block z-10 w-[180px]">
                                 {
                                     task.users?.length ?
                                         task.users.length > 0 ?
@@ -69,7 +71,7 @@ export default function TaskCard({ task }: { task: TaskResponse<UserResponse> })
                         </div>
                         {task.created_by.id === user?.id ? <div id={`btn-${task.id}`} className="relative group">
                             <button type="button" className="text-white bg-green-600 py-1 px-2 rounded-md text-sm font-semibold">Assign Users</button>
-                            <div className={clsx('rounded-sm space-y-1 absolute hidden shadow-md group-hover:block z-10 w-[200px]', {
+                            <div className={clsx('rounded-sm space-y-1 absolute hidden shadow-md group-hover:block z-10 w-[180px]', {
                                 'top-0 left-[100%]': distance > 250,
                                 'top-7 -left-0': distance < 250
                             })}>
