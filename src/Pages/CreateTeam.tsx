@@ -39,7 +39,7 @@ export default function CreateTeam() {
 
     return (
         <section className="w-full h-full flex items-center justify-center p-2">
-            <div className="space-y-5 max-w-[40%]">
+            <div className="space-y-5 sm:w-full md:w-[40%]">
                 <h1 className="text-4xl font-bold text-center">Create Your Own Team!</h1>
                 <form onSubmit={handleSubmit} className="w-full flex flex-col items-center gap-y-3">
                     <div className="w-[100px] h-[100px] relative">

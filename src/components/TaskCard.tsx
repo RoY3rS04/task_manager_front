@@ -38,8 +38,6 @@ export default function TaskCard({ task }: { task: TaskResponse<UserResponse> })
         completeTask(task);
     }
 
-    console.log(distance);
-
     return (
         <article className="rounded-md shadow-md p-3 relative">
             <div className="space-y-2">
